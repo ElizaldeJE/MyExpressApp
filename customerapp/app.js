@@ -71,15 +71,25 @@ app.get('/', function(req, res){
   });
 });
 
-
-
 app.post('/users/add', function(req, res){
-    var  newUser = {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.email,
+
+  req.checkBody('first_name', 'First Name is Required').notEmpty();
+  req.checkBody('last_name', 'Last Name is Required').notEmpty();
+  req.checkBody('email', 'Email is Required').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if(errors){
+    console.log('ERRORS');
+  } else {
+      var newUser = {
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          email: req.body.email
+      }
+
+        console.log('SUCCESS');
     }
-    console.log(newUser);
 });
 
 app.listen(3000, function(){
