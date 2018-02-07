@@ -25,6 +25,24 @@ app.use(bodyParser.urlencoded({extended:false}));
 // Set Static path
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Express Validator Middleware
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+    var namespace = param.split('.')
+    , root = namespace.shift()
+    , formParam = root;
+
+    while (namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param: formParam,
+      msg: msg,
+      value: value
+    };
+  }
+}));
+
 var users =[
   {
     id: 1,
@@ -52,6 +70,8 @@ app.get('/', function(req, res){
     users: users
   });
 });
+
+
 
 app.post('/users/add', function(req, res){
     var  newUser = {
